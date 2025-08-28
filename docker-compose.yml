@@ -1,70 +1,34 @@
-
-version: "3.9"
+version: '3.9'
 services:
   rabbitmq:
     image: rabbitmq:3-management
-    ports: ["5672:5672", "15672:15672"]
-
-  gateway:
-    build:
-      context: .
-      dockerfile: Dockerfile.gateway
-    depends_on: [orchestrator]
-    ports: ["8080:8080"]
-
-  ui:
-    build:
-      context: .
-      dockerfile: Dockerfile.ui
-    ports: ["8081:80"]
-    depends_on: [gateway]
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
   orchestrator:
     build:
       context: .
       dockerfile: Dockerfile.orchestrator
-    depends_on: [rabbitmq]
-    volumes: [ "./data:/app/data" ]
+    ports:
+      - "5001:8080"
+    depends_on:
+      - rabbitmq
 
-  sales:
+  gateway:
     build:
       context: .
-      dockerfile: Dockerfile.salesdataanalysis
-    depends_on: [rabbitmq]
-    volumes: [ "./data:/app/data" ]
+      dockerfile: Dockerfile.gateway
+    ports:
+      - "5000:8080"
+    depends_on:
+      - orchestrator
 
-  sku:
+  ui:
     build:
       context: .
-      dockerfile: Dockerfile.skugrouping
-    depends_on: [rabbitmq, sales]
-
-  shelf:
-    build:
-      context: .
-      dockerfile: Dockerfile.shelflocation
-    depends_on: [rabbitmq, sku]
-
-  rack:
-    build:
-      context: .
-      dockerfile: Dockerfile.rackcalculation
-    depends_on: [rabbitmq, shelf]
-
-  batch:
-    build:
-      context: .
-      dockerfile: Dockerfile.orderbatching
-    depends_on: [rabbitmq, rack]
-
-  station:
-    build:
-      context: .
-      dockerfile: Dockerfile.pickingstationallocation
-    depends_on: [rabbitmq, batch]
-
-  efficiency:
-    build:
-      context: .
-      dockerfile: Dockerfile.efficiencyanalysis
-    depends_on: [rabbitmq, station]
+      dockerfile: Dockerfile.ui
+    ports:
+      - "3000:80"
+    depends_on:
+      - gateway
