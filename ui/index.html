@@ -67,7 +67,11 @@
           }
         };
         try {
-          const resp = await fetch('/api/run', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+          const resp = await fetch('http://localhost:5000/api/run', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(payload)
+});
           const t = await resp.text();
           out.textContent = 'Response: ' + t;
         } catch (err) { out.textContent = 'Error: ' + err; }
