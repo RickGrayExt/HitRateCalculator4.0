@@ -73,8 +73,8 @@
   body: JSON.stringify(payload)
 });
 
-          const t = await resp.text();
-          out.textContent = 'Response: ' + t;
+          const data = await resp.json();
+out.textContent = 'Response: ' + JSON.stringify(data, null, 2);
         } catch (err) { out.textContent = 'Error: ' + err; }
       });
     </script>
