@@ -21,6 +21,8 @@ app.MapPost("/run", async (StartRunCommand req, IBus bus) =>
     var runId = req.RunId == Guid.Empty ? Guid.NewGuid() : req.RunId;
     var cmd = req with { RunId = runId, DatasetPath = dataset };
     await bus.Publish(cmd);
+
+    // ✅ Always return JSON instead of Accepted
     return Results.Json(new { runId });
 });
 
