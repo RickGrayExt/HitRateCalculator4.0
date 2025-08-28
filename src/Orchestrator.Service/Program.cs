@@ -1,4 +1,3 @@
-
 using Contracts;
 using MassTransit;
 
@@ -8,7 +7,11 @@ builder.Services.AddMassTransit(x =>
 {
     x.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("rabbitmq", h => { });
+        cfg.Host("rabbitmq", "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
     });
 });
 
@@ -22,7 +25,7 @@ app.MapPost("/run", async (StartRunCommand req, IBus bus) =>
     var cmd = req with { RunId = runId, DatasetPath = dataset };
     await bus.Publish(cmd);
 
-    // ✅ Always return JSON instead of Accepted
+    // ✅ Always return JSON
     return Results.Json(new { runId });
 });
 
