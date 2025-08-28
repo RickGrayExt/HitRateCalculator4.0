@@ -67,11 +67,12 @@
           }
         };
         try {
-          const resp = await fetch('http://localhost:5000/api/run', {
+          const resp = await fetch('https://super-duper-barnacle-4j9rpjg7j9w92v5g-5000.app.github.dev/api/run', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify(payload)
 });
+
           const t = await resp.text();
           out.textContent = 'Response: ' + t;
         } catch (err) { out.textContent = 'Error: ' + err; }
