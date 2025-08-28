@@ -5,6 +5,8 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
 
   orchestrator:
     build:
@@ -32,3 +34,55 @@ services:
       - "3000:80"
     depends_on:
       - gateway
+
+  rackcalculation:
+    build:
+      context: .
+      dockerfile: Dockerfile.rackcalculation
+    depends_on:
+      - rabbitmq
+
+  efficiencyanalysis:
+    build:
+      context: .
+      dockerfile: Dockerfile.efficiencyanalysis
+    depends_on:
+      - rabbitmq
+
+  salesdataanalysis:
+    build:
+      context: .
+      dockerfile: Dockerfile.salesdataanalysis
+    depends_on:
+      - rabbitmq
+
+  pickingstationallocation:
+    build:
+      context: .
+      dockerfile: Dockerfile.pickingstationallocation
+    depends_on:
+      - rabbitmq
+
+  shelflocation:
+    build:
+      context: .
+      dockerfile: Dockerfile.shelflocation
+    depends_on:
+      - rabbitmq
+
+  orderbatching:
+    build:
+      context: .
+      dockerfile: Dockerfile.orderbatching
+    depends_on:
+      - rabbitmq
+
+  skugrouping:
+    build:
+      context: .
+      dockerfile: Dockerfile.skugrouping
+    depends_on:
+      - rabbitmq
+
+volumes:
+  rabbitmq_data:
